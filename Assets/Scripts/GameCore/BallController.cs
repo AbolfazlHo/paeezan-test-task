@@ -11,6 +11,8 @@ namespace GameCore
         [SerializeField] private IntEvent OnScoreChanged;
         [SerializeField] private NullEvent OnGameEnded;
         [SerializeField] private NullEvent OnStartMoving;
+        
+        // برای رعایت ساختار کلی و احتمال استفاده در آینده اضافه شده است.
         [SerializeField] private IntEvent OnCurrencyEarned;
         
         [SerializeField] private ParticleSystem dieParticle;
@@ -43,8 +45,6 @@ namespace GameCore
         private float _firstSpeed ;
         private Color _firstColor;
 
-//        private int _earnedCurrency = 0;
-
         private void Start()
         {
             _firstSpeed = speed;
@@ -59,7 +59,6 @@ namespace GameCore
             OnGameEnded.OnEventRaised += Die;
             OnGameEnded.OnEventRaised += EarnCurrency;
             OnStartMoving.OnEventRaised += StartMovement;
-//            OnCurrencyEarned.OnEventRaised += SaveCurrency;
         }
 
         private void OnDisable()
@@ -67,7 +66,6 @@ namespace GameCore
             OnGameEnded.OnEventRaised -= Die;
             OnGameEnded.OnEventRaised -= EarnCurrency;
             OnStartMoving.OnEventRaised -= StartMovement;
-//            OnCurrencyEarned.OnEventRaised -= SaveCurrency;
         }
 
         private void StartMovement()
@@ -150,11 +148,6 @@ namespace GameCore
             });
         }
 
-//        private void CalculateEarnedCurrency()
-//        {
-//            _earnedCurrency = _score / 10;
-//        }
-
         private void EarnCurrency()
         {
             if (_score <= 0) return;
@@ -164,14 +157,6 @@ namespace GameCore
             PlayerPrefsSaveService.Main.SaveInt("Currency", totalCurrency);
             OnCurrencyEarned.Raise(totalCurrency);
         }
-//        private void SaveCurrency(int earnedCurrency)
-//        {
-//            var totalCurrency = PlayerPrefsSaveService.Main.LoadInt("currency");
-//            totalCurrency += earnedCurrency;
-//            PlayerPrefsSaveService.Main.SaveInt("currency", totalCurrency);
-//        }
-        
-//        private 
     }
     
 }
