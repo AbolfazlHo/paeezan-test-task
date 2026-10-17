@@ -7,5 +7,6 @@ namespace DataStructure
         public int rank;
         public int score;
         public bool isUser;
+        public int currency;
     }
 }

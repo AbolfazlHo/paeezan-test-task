@@ -971,6 +971,10 @@ PrefabInstance:
       propertyPath: center
       value: 
       objectReference: {fileID: 412826641}
+    - target: {fileID: 1697011044444229008, guid: fc4f464ef4dd3b1489e12f02e3c0cff0, type: 3}
+      propertyPath: OnCurrencyEarned
+      value: 
+      objectReference: {fileID: 11400000, guid: 6312032127e364461983525a7a8da6c1, type: 2}
     - target: {fileID: 5131028281787999489, guid: fc4f464ef4dd3b1489e12f02e3c0cff0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.36
@@ -1113,9 +1117,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6596541332438800492, guid: 7def8176acab13a44a6e0cb4be90725b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6596541332438800492, guid: 7def8176acab13a44a6e0cb4be90725b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7184433992705237812, guid: 7def8176acab13a44a6e0cb4be90725b, type: 3}
       propertyPath: m_Name
       value: GameUi
+      objectReference: {fileID: 0}
+    - target: {fileID: 7521898339888316521, guid: 7def8176acab13a44a6e0cb4be90725b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7521898339888316521, guid: 7def8176acab13a44a6e0cb4be90725b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090854113065590811, guid: 7def8176acab13a44a6e0cb4be90725b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090854113065590811, guid: 7def8176acab13a44a6e0cb4be90725b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -20,7 +20,8 @@ namespace Export
                     rank = PlayerPrefsSaveService.Main.LoadInt("PlayerRank", 4510),
                     name = PlayerPrefsSaveService.Main.LoadString("PlayerName", "Honey Drops"),
                     score = PlayerPrefsSaveService.Main.LoadInt("Score", 6000),
-                    isUser = true
+                    isUser = true,
+                    currency = PlayerPrefsSaveService.Main.LoadInt("Currency")
                 };
 
                 string json = JsonUtility.ToJson(info, true);

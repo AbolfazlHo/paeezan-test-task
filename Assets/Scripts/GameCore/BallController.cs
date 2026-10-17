@@ -2,6 +2,7 @@ using DG.Tweening;
 using Enums;
 using UnityEngine;
 using ScriptableObjects.GameEvents;
+using ScriptableObjects.Services;
 
 namespace GameCore
 {
@@ -10,6 +11,8 @@ namespace GameCore
         [SerializeField] private IntEvent OnScoreChanged;
         [SerializeField] private NullEvent OnGameEnded;
         [SerializeField] private NullEvent OnStartMoving;
+        [SerializeField] private IntEvent OnCurrencyEarned;
+        
         [SerializeField] private ParticleSystem dieParticle;
 
         [SerializeField] private Transform center;
@@ -40,6 +43,8 @@ namespace GameCore
         private float _firstSpeed ;
         private Color _firstColor;
 
+//        private int _earnedCurrency = 0;
+
         private void Start()
         {
             _firstSpeed = speed;
@@ -52,13 +57,17 @@ namespace GameCore
         private void OnEnable()
         {
             OnGameEnded.OnEventRaised += Die;
-            OnStartMoving.OnEventRaised += StartMovement; 
+            OnGameEnded.OnEventRaised += EarnCurrency;
+            OnStartMoving.OnEventRaised += StartMovement;
+//            OnCurrencyEarned.OnEventRaised += SaveCurrency;
         }
 
         private void OnDisable()
         {
             OnGameEnded.OnEventRaised -= Die;
+            OnGameEnded.OnEventRaised -= EarnCurrency;
             OnStartMoving.OnEventRaised -= StartMovement;
+//            OnCurrencyEarned.OnEventRaised -= SaveCurrency;
         }
 
         private void StartMovement()
@@ -140,6 +149,29 @@ namespace GameCore
                 _score = 0;
             });
         }
+
+//        private void CalculateEarnedCurrency()
+//        {
+//            _earnedCurrency = _score / 10;
+//        }
+
+        private void EarnCurrency()
+        {
+            if (_score <= 0) return;
+            var earnedCurrency = _score / 10;
+            var totalCurrency = PlayerPrefsSaveService.Main.LoadInt("Currency");
+            totalCurrency += earnedCurrency;
+            PlayerPrefsSaveService.Main.SaveInt("Currency", totalCurrency);
+            OnCurrencyEarned.Raise(totalCurrency);
+        }
+//        private void SaveCurrency(int earnedCurrency)
+//        {
+//            var totalCurrency = PlayerPrefsSaveService.Main.LoadInt("currency");
+//            totalCurrency += earnedCurrency;
+//            PlayerPrefsSaveService.Main.SaveInt("currency", totalCurrency);
+//        }
+        
+//        private 
     }
     
 }
