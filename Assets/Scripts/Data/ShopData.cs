@@ -1,82 +1,97 @@
-using System.Collections;
-using Enums;
-using ScriptableObjects.GameEvents;
-using ScriptableObjects.Services;
-using TMPro;
+using System.Collections.Generic;
+using DataStructure;
 using UnityEngine;
 
 namespace Data
 {
+    /// <summary>
+    /// Loads and exposes the static shop catalog. Player ownership and currency
+    /// are stored separately by ShopHandler and PlayerPrefsSaveService.
+    /// </summary>
     public class ShopData : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI _currencyText;
-        [SerializeField] private NullEvent OnShopDataLoading;
-        [SerializeField] private NullEvent OnShopDataLoaded;
-        [SerializeField] private IntEvent OnShopPanelSelected;
+        private const string CatalogResourcePath = "Shop/ShopData";
 
-        private bool _isLoadning = false;
+        public const string SpritesGeneralPath = "Shop/Sprites";
 
-        private Coroutine _loadShopItemsCoroutine = null;
-        private Coroutine _placeShopItemsCoroutine = null;
-        
-        private void OnEnable()
+        private readonly List<ShopItemDataModel> _items = new List<ShopItemDataModel>();
+        private readonly Dictionary<int, ShopItemDataModel> _itemsById = new Dictionary<int, ShopItemDataModel>();
+
+        private bool _loadAttempted;
+        private bool _isLoaded;
+
+        public IReadOnlyList<ShopItemDataModel> Items
         {
-            OnShopPanelSelected.OnEventRaised += CheckForFirstShow;
-            OnShopDataLoading.OnEventRaised += CheckForLoad;
-        }
-
-        private void OnDisable()
-        {
-            OnShopPanelSelected.OnEventRaised -= CheckForFirstShow;
-            OnShopDataLoading.OnEventRaised -= CheckForLoad;
-        }
-
-        private void CheckForFirstShow(int tabType)
-        {
-            if (tabType != (int)TabType.Shop) return;
-            OnShopDataLoading.Raise();
-        }
-        
-        private void CheckForLoad()
-        {
-            if (_isLoadning) return;
-
-            _isLoadning = true;
-            LoadCurrency();
-
-            if (_loadShopItemsCoroutine != null) StopCoroutine(_loadShopItemsCoroutine);
-            if (_placeShopItemsCoroutine != null) StopCoroutine(_placeShopItemsCoroutine);
-
-            _loadShopItemsCoroutine = StartCoroutine(nameof(LoadShopItems));
-        }
-
-        private void LoadCurrency()
-        {
-            var totalCurrency = PlayerPrefsSaveService.Main.LoadInt("Currency");
-            _currencyText.text = $"Currency : {totalCurrency}";
-        }
-
-        private IEnumerator LoadShopItems()
-        {
-            // ToDo . . . 
-
-            // صرفا برای دیدن پنل لودیگ در حالت کنونی
-            for (int i = 0; i < 10; i++)
+            get
             {
-                yield return new WaitForSeconds(0.1f);
+                LoadCatalog();
+                return _items;
+            }
+        }
+
+        public bool LoadCatalog()
+        {
+            if (_loadAttempted)
+                return _isLoaded;
+
+            _loadAttempted = true;
+            var serializedCatalog = Resources.Load<TextAsset>(CatalogResourcePath);
+            if (serializedCatalog == null)
+            {
+                Debug.LogError($"Shop catalog was not found at Resources/{CatalogResourcePath}.json", this);
+                return false;
             }
 
-            yield return _placeShopItemsCoroutine = StartCoroutine(nameof(PlaceShopItems));
+            ShopDataWrapper catalog;
+            try
+            {
+                catalog = JsonUtility.FromJson<ShopDataWrapper>(serializedCatalog.text);
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogError($"Could not parse the shop catalog: {exception.Message}", this);
+                return false;
+            }
+
+            if (catalog == null || catalog.items == null)
+            {
+                Debug.LogError("Shop catalog is empty or has an invalid format.", this);
+                return false;
+            }
+
+            foreach (var item in catalog.items)
+            {
+                if (item == null)
+                {
+                    Debug.LogError("Shop catalog contains an empty item entry.", this);
+                    _items.Clear();
+                    _itemsById.Clear();
+                    return false;
+                }
+
+                if (_itemsById.ContainsKey(item.id))
+                {
+                    Debug.LogError($"Shop catalog contains duplicate item id {item.id}.", this);
+                    _items.Clear();
+                    _itemsById.Clear();
+                    return false;
+                }
+
+                _items.Add(item);
+                _itemsById.Add(item.id, item);
+            }
+
+            _isLoaded = true;
+            return true;
         }
 
-        private IEnumerator PlaceShopItems()
+        public bool TryGetItem(int itemId, out ShopItemDataModel item)
         {
-            // ToDo . . . 
+            if (LoadCatalog() && _itemsById.TryGetValue(itemId, out item))
+                return true;
 
-            _isLoadning = false;
-            OnShopDataLoaded.Raise();
-            
-            yield return null;
+            item = null;
+            return false;
         }
     }
 }

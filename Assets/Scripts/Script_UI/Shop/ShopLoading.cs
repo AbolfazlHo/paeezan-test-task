@@ -2,7 +2,7 @@ using ScriptableObjects.GameEvents;
 using UnityEngine;
 using DG.Tweening;
 
-namespace UI
+namespace UI.Shop
 {
     //ToDo: Create a base class for loading. ShopLoading and LeaderboardLaoding should inherit it.
     public class ShopLoading : MonoBehaviour

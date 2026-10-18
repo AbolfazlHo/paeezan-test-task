@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "id": 101,
+      "type": 1,
+      "purchasePolicy": 1,
+      "name": "Amber Pilot",
+      "price": 250
+    },
+    {
+      "id": 201,
+      "type": 2,
+      "purchasePolicy": 1,
+      "name": "Sunset Valley",
+      "price": 300
+    },
+    {
+      "id": 301,
+      "type": 3,
+      "purchasePolicy": 2,
+      "name": "Extra Life",
+      "price": 100
+    },
+    {
+      "id": 302,
+      "type": 3,
+      "purchasePolicy": 2,
+      "name": "Slow Time",
+      "price": 150
+    }
+  ]
+}
