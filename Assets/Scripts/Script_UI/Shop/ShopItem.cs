@@ -31,6 +31,7 @@ namespace UI.Shop
         /// <summary>Whether the item can be bought under its configured purchase policy.</summary>
         public bool CanPurchase => _data != null && _data.CanPurchase(_hasPurchased);
 
+        // اینجا نیز می‌توانیم همچنان از event tunnel استفاده کنیم به جای callback؛ ولی به نظر می‌رسد چون در یک سیستم هستند چندان مفید نباشد.
         /// <summary>Sets the item's data, rendered state, and action callbacks.</summary>
         public void Initialize(
             ShopItemDataModel data,
