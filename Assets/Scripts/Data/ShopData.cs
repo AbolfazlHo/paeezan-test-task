@@ -93,5 +93,38 @@ namespace Data
             item = null;
             return false;
         }
+
+        public static bool TryLoadItemFromResources(int itemId, out ShopItemDataModel item)
+        {
+            item = null;
+            var serializedCatalog = Resources.Load<TextAsset>(CatalogResourcePath);
+            if (serializedCatalog == null)
+            {
+                Debug.LogError($"Shop catalog was not found at Resources/{CatalogResourcePath}.json");
+                return false;
+            }
+
+            try
+            {
+                var catalog = JsonUtility.FromJson<ShopDataWrapper>(serializedCatalog.text);
+                if (catalog?.items == null)
+                    return false;
+
+                foreach (var candidate in catalog.items)
+                {
+                    if (candidate != null && candidate.id == itemId)
+                    {
+                        item = candidate;
+                        return true;
+                    }
+                }
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogError($"Could not parse the shop catalog: {exception.Message}");
+            }
+
+            return false;
+        }
     }
 }

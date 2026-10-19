@@ -48,17 +48,18 @@ namespace UI.Shop
             if (_priceText != null)
                 _priceText.text = data.price.ToString();
 
+            var isTheme = data.type == ShopItemType.PlayerTheme || data.type == ShopItemType.WorldTheme;
             if (_purchaseButton != null)
             {
+                _purchaseButton.gameObject.SetActive(!isTheme || !hasPurchased);
                 _purchaseButton.onClick.RemoveListener(HandlePurchaseClicked);
                 _purchaseButton.onClick.AddListener(HandlePurchaseClicked);
                 _purchaseButton.interactable = CanPurchase;
             }
 
-            var isTheme = data.type == ShopItemType.PlayerTheme || data.type == ShopItemType.WorldTheme;
             if (_equipButton != null)
             {
-                _equipButton.gameObject.SetActive(isTheme);
+                _equipButton.gameObject.SetActive(isTheme && hasPurchased);
                 _equipButton.onClick.RemoveListener(HandleEquipClicked);
                 _equipButton.onClick.AddListener(HandleEquipClicked);
                 _equipButton.interactable = hasPurchased && !isEquipped;
