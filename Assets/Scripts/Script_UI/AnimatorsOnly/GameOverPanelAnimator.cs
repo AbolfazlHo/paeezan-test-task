@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace UI
 {
+    /// <summary>Animates the game-over panel and handles replay or return-to-menu transitions.</summary>
     public class GameOverPanelAnimator : MonoBehaviour
     {
         [SerializeField] private NullEvent onGameOver;

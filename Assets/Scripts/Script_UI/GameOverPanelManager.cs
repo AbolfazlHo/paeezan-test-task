@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace UI
 {
+    /// <summary>Updates the result screen with player identity, score, and high score.</summary>
     public class GameOverPanelManager : MonoBehaviour
     {
        [SerializeField] private IntEvent OnScoreChanged;

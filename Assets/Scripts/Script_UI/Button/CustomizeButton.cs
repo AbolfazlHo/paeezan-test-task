@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace UI
 {
+    /// <summary>Adds a pressed-text offset and delayed reactivation helper to a Unity button.</summary>
     public class CustomizeButton : UnityEngine.UI.Button
     {
         [Header("Text Press Effect")]
@@ -22,6 +23,7 @@ namespace UI
                 originalTextPos = buttonText.localPosition;
         }
         
+        /// <summary>Runs the base pointer-down behavior and presses the button label visually.</summary>
         public override void OnPointerDown(PointerEventData eventData)
         {
             base.OnPointerDown(eventData);
@@ -29,6 +31,7 @@ namespace UI
                 buttonText.localPosition = originalTextPos + new Vector3(0, pressOffsetY, 0);
         }
 
+        /// <summary>Runs the base pointer-up behavior and restores the label position.</summary>
         public override void OnPointerUp(PointerEventData eventData)
         {
             base.OnPointerUp(eventData);
@@ -36,6 +39,7 @@ namespace UI
                 buttonText.localPosition = originalTextPos;
         }
 
+        /// <summary>Re-enables the button after its configured delay when it is inactive.</summary>
         public  void ActivateInteractableAfterDelay()
         {
             if (!interactable && !waiting && gameObject.activeInHierarchy)

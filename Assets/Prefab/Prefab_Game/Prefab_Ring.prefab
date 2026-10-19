@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7798206852334355926}
   - component: {fileID: 3097726212167179397}
   - component: {fileID: 8266569440161013950}
+  - component: {fileID: 6412077557924401823}
   m_Layer: 0
   m_Name: Prefab_Ring
   m_TagString: Untagged
@@ -88,6 +89,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6412077557924401823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5455259625687474337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd88433bc13447ab35d1d8f9d8b6ed3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  _role: 1
 --- !u!114 &8266569440161013950
 MonoBehaviour:
   m_ObjectHideFlags: 0

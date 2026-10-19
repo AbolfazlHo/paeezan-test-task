@@ -4,9 +4,12 @@ using DG.Tweening;
 
 namespace UI
 {
+    /// <summary>Shows and hides the leaderboard loading indicator in response to events.</summary>
     public class LeadeerBoardLoading : MonoBehaviour
     {
+        /// <summary>Raised when a leaderboard tab requests data.</summary>
         public NullEvent OnLeaderBoardTabClicked;
+        /// <summary>Raised when leaderboard data is ready for display.</summary>
         public NullEvent OnLeaderBoardDataLoaded;
         [SerializeField] private Transform icon;
         [SerializeField]private CanvasGroup canvasGroup;
@@ -28,6 +31,7 @@ namespace UI
             OnLeaderBoardDataLoaded.OnEventRaised -= HideLoading;
         }
 
+        /// <summary>Displays and animates the loading icon.</summary>
         public void ShowLoading()
         {
             icon.gameObject.SetActive(true);
@@ -45,6 +49,7 @@ namespace UI
 
         }
 
+        /// <summary>Fades out the loading icon and disables it when the fade completes.</summary>
         public void HideLoading()
         {
             icon.DOKill();

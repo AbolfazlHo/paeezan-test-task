@@ -8,8 +8,10 @@ using ScriptableObjects.GameEvents;
 
 namespace AudioManger
 {
+    /// <summary>Owns music and sound effects across scene changes.</summary>
     public class AudioManager : MonoBehaviour
     {
+        /// <summary>The active audio manager used by gameplay scripts.</summary>
         public static AudioManager Instance;
         
         [Header("Events")]
@@ -77,6 +79,7 @@ namespace AudioManger
             PlaySFX(SoundType.UIMove);
         }
 
+        /// <summary>Plays the configured one-shot clip for the requested sound.</summary>
         public void PlaySFX(SoundType type)
         {
             if (!clipMap.ContainsKey(type)) return;
@@ -143,10 +146,13 @@ namespace AudioManger
         }
     }
 
+    /// <summary>Maps a sound category to its configured audio clip.</summary>
     [Serializable]
     public class SoundClip
     {
+        /// <summary>Category used to request this clip.</summary>
         public SoundType type;
+        /// <summary>Audio asset played for the category.</summary>
         public AudioClip clip;
     }
 }

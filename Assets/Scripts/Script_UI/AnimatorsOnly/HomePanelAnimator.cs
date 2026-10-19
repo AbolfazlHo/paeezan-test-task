@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    /// <summary>Animates the menu title, player name, and start button transitions.</summary>
     public class HomePanelAnimator : MonoBehaviour
     {
         [SerializeField] private Image backgroundImage;
@@ -104,6 +105,7 @@ namespace UI
 
         private Sequence exitSequence;
 
+        /// <summary>Plays the menu exit transition and raises the menu-animation-complete event.</summary>
         [Button]
         public void PlayExitAnimation()
         {

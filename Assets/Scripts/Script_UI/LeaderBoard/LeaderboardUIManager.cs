@@ -5,6 +5,7 @@ using ScriptableObjects.GameEvents;
 
 namespace UI
 {
+    /// <summary>Virtualizes leaderboard rows in a scroll view and centers the local player.</summary>
     public class LeaderboardUIManager : MonoBehaviour
     {
         [SerializeField] private NullEvent OnDataLoaded;
@@ -48,6 +49,7 @@ namespace UI
         }
         
 
+        /// <summary>Updates content height and scrolls the view to the local player's row.</summary>
         private void LoadUIFromData()
         {
             totalCount = Data.LeaderboardData.Instance.players.Count;
@@ -61,6 +63,7 @@ namespace UI
         }
 
 
+        /// <summary>Creates enough reusable row objects for the visible window.</summary>
         private void EnsurePoolSize(int needed)
         {
             while (itemPool.Count < needed)
@@ -75,6 +78,7 @@ namespace UI
         }
 
 
+        /// <summary>Positions the virtualized list around the local player.</summary>
         private void AutoScrollToUser()
         {
             int userIndex = Data.LeaderboardData.Instance.players.FindIndex(p => p.isUser);
@@ -100,6 +104,7 @@ namespace UI
         }
 
 
+        /// <summary>Rebinds visible row objects to entries beginning at the supplied index.</summary>
         private void UpdateItems(int startIndex)
         {
             var players = Data.LeaderboardData.Instance.players;

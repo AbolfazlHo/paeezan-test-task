@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace OrientationLock
 {
-    
+    /// <summary>Locks device rotation to the orientation detected when this component starts.</summary>
     public class OrientationLock : MonoBehaviour
     {
         void Start()

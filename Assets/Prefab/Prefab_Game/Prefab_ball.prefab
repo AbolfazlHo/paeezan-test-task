@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1697011044444229008}
   - component: {fileID: 7230484107975866464}
   - component: {fileID: 8135782939549262619}
+  - component: {fileID: 6730918832417750211}
   m_Layer: 0
   m_Name: Prefab_Ball
   m_TagString: Untagged
@@ -92,6 +93,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6730918832417750211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5143587220191284237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd88433bc13447ab35d1d8f9d8b6ed3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  _role: 0
 --- !u!114 &1697011044444229008
 MonoBehaviour:
   m_ObjectHideFlags: 0

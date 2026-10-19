@@ -8,6 +8,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace UI
 {
+    /// <summary>Coordinates the menu start button, menu transition event, and game scene loading.</summary>
     public class HomePanel : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI playerNameText;

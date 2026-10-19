@@ -609,6 +609,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShopPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 9141324985973288154, guid: 1f8359f1dc2bbda4ab1cf6432118970f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -625,6 +629,10 @@ PrefabInstance:
     - target: {fileID: 795910659925156110, guid: f506764e106e4574eb3d7ae5e0fd2ddf, type: 3}
       propertyPath: m_Name
       value: LeaderBourdPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 795910659925156110, guid: f506764e106e4574eb3d7ae5e0fd2ddf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2383565200297252454, guid: f506764e106e4574eb3d7ae5e0fd2ddf, type: 3}
       propertyPath: m_Pivot.x
@@ -738,6 +746,10 @@ PrefabInstance:
     - target: {fileID: 1584356908118537005, guid: 72675503d05941e44a87038322da5a7b, type: 3}
       propertyPath: m_Name
       value: HomePanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 1584356908118537005, guid: 72675503d05941e44a87038322da5a7b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056789726036502899, guid: 72675503d05941e44a87038322da5a7b, type: 3}
       propertyPath: m_AnchorMax.y
