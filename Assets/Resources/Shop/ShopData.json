@@ -19,14 +19,16 @@
       "type": 3,
       "purchasePolicy": 2,
       "name": "Extra Life",
-      "price": 100
+      "price": 100,
+      "powerupEffect": 1
     },
     {
       "id": 302,
       "type": 3,
       "purchasePolicy": 2,
       "name": "Slow Time",
-      "price": 150
+      "price": 150,
+      "powerupEffect": 2
     }
   ]
 }

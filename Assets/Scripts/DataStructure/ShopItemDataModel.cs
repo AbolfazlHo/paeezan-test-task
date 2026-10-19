@@ -16,6 +16,13 @@ namespace DataStructure
         UniqueUnlock = 1,
         Stackable = 2
     }
+
+    public enum ShopPowerupEffect
+    {
+        None = 0,
+        ShieldNextHit = 1,
+        SlowMotion = 2
+    }
     
     [Serializable]
     public class ShopItemDataModel
@@ -31,6 +38,7 @@ namespace DataStructure
         public ShopItemPurchasePolicy purchasePolicy;
         public string name;
         public int price;
+        public ShopPowerupEffect powerupEffect;
 
         public ShopItemPurchasePolicy GetPurchasePolicy()
         {

@@ -1,6 +1,8 @@
 using DG.Tweening;
+using System;
 using Enums;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using ScriptableObjects.GameEvents;
 using ScriptableObjects.Services;
 
@@ -44,6 +46,10 @@ namespace GameCore
         private Vector3 _firstLocalScale;
         private float _firstSpeed ;
         private Color _firstColor;
+        private bool _hasActiveShield;
+
+        public bool HasActiveShield => _hasActiveShield;
+        public event Action ActiveShieldConsumed;
 
         private void Start()
         {
@@ -70,7 +76,19 @@ namespace GameCore
 
         private void StartMovement()
         {
+            _hasActiveShield = false;
             canMove = true;
+        }
+
+        public bool TryActivateShield()
+        {
+            if (!canMove || _hasActiveShield)
+                return false;
+
+            _hasActiveShield = true;
+            if (_spriteRenderer != null)
+                _spriteRenderer.color = new Color(0.55f, 0.9f, 1f, 1f);
+            return true;
         }
 
         private void Update()
@@ -84,7 +102,7 @@ namespace GameCore
             angle += speed * Time.deltaTime;
             angle %= 360f;
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !IsPointerOverUi())
             {
                 AudioManger.AudioManager.Instance.PlaySFX(SoundType.Move);
                 isInside = !isInside;
@@ -97,13 +115,42 @@ namespace GameCore
             transform.position = center.position + new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0) * radius;
         }
 
+        private static bool IsPointerOverUi()
+        {
+            var eventSystem = EventSystem.current;
+            if (eventSystem == null)
+                return false;
+
+            if (Input.touchCount > 0)
+            {
+                for (var i = 0; i < Input.touchCount; i++)
+                {
+                    if (eventSystem.IsPointerOverGameObject(Input.GetTouch(i).fingerId))
+                        return true;
+                }
+            }
+
+            return eventSystem.IsPointerOverGameObject();
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!canMove)
                 return;
 
             if (other.CompareTag("Obsticle"))
+            {
+                if (_hasActiveShield)
+                {
+                    _hasActiveShield = false;
+                    if (_spriteRenderer != null)
+                        _spriteRenderer.color = _firstColor;
+                    ActiveShieldConsumed?.Invoke();
+                    return;
+                }
+
                 OnGameEnded.Raise();
+            }
             else
             {
                 _score += increasedScoreByPickingStars;
@@ -114,6 +161,8 @@ namespace GameCore
 
         private void Die()
         {
+            canMove = false;
+            _hasActiveShield = false;
             AudioManger.AudioManager.Instance.PlaySFX(SoundType.Explosion);
             speed = 0;
 
