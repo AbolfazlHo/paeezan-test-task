@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 
 namespace DataStructure
 {
@@ -40,12 +39,6 @@ namespace DataStructure
     [Serializable]
     public class ShopItemDataModel
     {
-//        public int Id { get; set; }
-//        public ShopItemType Type { get; set; }
-//        public string Name { get; set; }
-//        public int Price { get; set; }
-
-
         /// <summary>Stable identifier used to look up this item and its assets.</summary>
         public int id;
         /// <summary>Determines whether this entry is a player theme, world theme, or powerup.</summary>
