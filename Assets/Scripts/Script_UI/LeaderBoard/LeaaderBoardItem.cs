@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    /// <summary>Renders one leaderboard row and highlights the local player's entry.</summary>
     public class LeaderBoardItem : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI rankText;
@@ -14,6 +15,7 @@ namespace UI
         [SerializeField] private Image nameImage;
         [SerializeField] private Image scoreImage;
 
+        /// <summary>Assigns row text, highlights the local player, and saves their rank.</summary>
         public void Initialize(int rank, string nameOfPlayer, int score,bool isUser)
         {
             rankText.text = rank.ToString();

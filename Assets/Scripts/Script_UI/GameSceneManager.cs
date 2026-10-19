@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace UI
 {
+    /// <summary>Displays the current score and player record during gameplay.</summary>
     public class GameSceneManager : MonoBehaviour
     {
         [SerializeField] private IntEvent OnScoreChanged;

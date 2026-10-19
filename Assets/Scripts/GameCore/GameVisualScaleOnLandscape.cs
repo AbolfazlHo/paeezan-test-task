@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameCore
 {
-
+    /// <summary>Scales game visuals for landscape screens and restores base scale in portrait.</summary>
     public class GameVisualScaleOnLandscape : MonoBehaviour
     {
         private void Awake()

@@ -6,6 +6,7 @@ using TMPro;
 
 namespace UI
 { 
+    /// <summary>Animates the gameplay scene into and out of its active presentation.</summary>
     public class GameSceneAnimationManager : MonoBehaviour
     {
         [SerializeField] private NullEvent OnBallStartMoving;
@@ -54,6 +55,7 @@ namespace UI
             OnGameStart.OnEventRaised -= HandleGameStart;
         }
         
+        /// <summary>Starts the initial gameplay scene entrance animation.</summary>
         public void Start()
         {
             PlayStartAnimation();
@@ -67,6 +69,7 @@ namespace UI
         }
 
 
+        /// <summary>Plays the scene entrance animation and signals when the ball can start.</summary>
         public void PlayStartAnimation()
         {
             if (scoreText) scoreText.transform.position = scoreTextStartPos + Vector3.left * 800;
@@ -104,6 +107,7 @@ namespace UI
         }
         
         
+        /// <summary>Moves gameplay UI and the ring away after the run ends.</summary>
         public void PlayEndAnimation()
         {
             Sequence endSeq = DOTween.Sequence();

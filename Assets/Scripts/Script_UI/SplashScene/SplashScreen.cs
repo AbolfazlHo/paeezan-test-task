@@ -4,6 +4,7 @@ using DG.Tweening;
 
 namespace UI
 {
+    /// <summary>Plays the splash fade sequence and loads the next build scene.</summary>
     public class SplashScreen : MonoBehaviour
     {
         [SerializeField] private CanvasGroup canvasGroup;

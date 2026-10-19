@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace UI
 {
+    /// <summary>Moves tab content horizontally and maps drag gestures to tab selections.</summary>
     public class TabPanel : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         [SerializeField] private TabType tab;
@@ -21,6 +22,7 @@ namespace UI
         private PanelSequence panelSequence;
         private float offscreenX;
 
+        /// <summary>Changes tabs when a completed drag exceeds the configured swipe threshold.</summary>
         public void OnEndDrag(PointerEventData eventData)
         {
             float deltaX = eventData.pressPosition.x - eventData.position.x;
@@ -82,6 +84,7 @@ namespace UI
             UpdatePosition(selectedIndex);
         }
 
+        /// <summary>Moves this tab's panel to the selected or off-screen position.</summary>
         private void UpdatePosition(int centerIndex, bool instant = false)
         {
             int myIndex = System.Array.IndexOf(panelSequence.sequence, tab);
@@ -101,6 +104,7 @@ namespace UI
                 rect.DOAnchorPos(targetPos, animDuration).SetEase(Ease.OutCubic);
         }
 
+        /// <summary>Receives drag callbacks; movement is applied when the drag ends.</summary>
         public void OnDrag(PointerEventData eventData)
         {
         }

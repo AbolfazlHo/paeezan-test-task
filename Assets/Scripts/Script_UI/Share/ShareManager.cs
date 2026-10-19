@@ -2,10 +2,12 @@ using UnityEngine;
 using System.Collections;
 namespace UI
 {
+    /// <summary>Captures the current screen and opens the native share sheet.</summary>
     public class ShareManager : MonoBehaviour
     {
         private string screenshotPath;
 
+        /// <summary>Starts screen capture and shares the resulting image.</summary>
         public void ShareButton()
         {
             StartCoroutine(CaptureAndShare());

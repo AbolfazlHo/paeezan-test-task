@@ -6,6 +6,7 @@ using ScriptableObjects.GameEvents;
 
 namespace UI
 {
+    /// <summary>Publishes tab selection and animates the button's selected state.</summary>
     public class TabButton : MonoBehaviour
     {
         [SerializeField] private TabType tab;     

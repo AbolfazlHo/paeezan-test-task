@@ -7,6 +7,7 @@
 [Ll]ogs/
 MemoryCaptures/
 UserSettings/
+Apk/
 
 # Ignore IDE and system files
 *.csproj

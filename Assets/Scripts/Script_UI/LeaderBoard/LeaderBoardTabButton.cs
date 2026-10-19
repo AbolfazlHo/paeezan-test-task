@@ -7,6 +7,7 @@ using ScriptableObjects.GameEvents;
 
 namespace UI
 {
+    /// <summary>Publishes leaderboard tab selections and updates the button appearance.</summary>
     public class LeaderBoardTabButton : MonoBehaviour
     {
         [SerializeField] private LeaderBoardTabType tab;     
