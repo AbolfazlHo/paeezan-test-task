@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Data;
 using DataStructure;
 using GameCore;
@@ -11,22 +12,16 @@ using UnityEngine.UI;
 namespace UI
 {
     /// <summary>
-    /// Builds the in-run powerup controls and consumes persisted inventory only
-    /// while the run is active.
+    /// Builds one in-run control for every powerup present in the saved inventory.
     /// </summary>
     public class PowerupHudController : MonoBehaviour
     {
         [SerializeField] private NullEvent _onRunStarted;
         [SerializeField] private NullEvent _onRunEnded;
-        [SerializeField] private int _shieldPowerupId = 301;
-        [SerializeField] private int _slowMotionPowerupId = 302;
         [SerializeField] private float _slowMotionScale = 0.5f;
         [SerializeField] private float _slowMotionDuration = 5f;
 
-        private Button _shieldButton;
-        private TextMeshProUGUI _shieldLabel;
-        private Button _slowMotionButton;
-        private TextMeshProUGUI _slowMotionLabel;
+        private readonly List<PowerupButton> _buttons = new List<PowerupButton>();
         private BallController _ballController;
         private PlayerPrefsSaveService _saveService;
         private Coroutine _slowMotionCoroutine;
@@ -36,9 +31,10 @@ namespace UI
         {
             _ballController = FindFirstObjectByType<BallController>();
             if (_ballController != null)
-                _ballController.ActiveShieldConsumed += HandleShieldConsumed;
+                _ballController.ActiveShieldConsumed += RefreshButtons;
+
             _saveService = PlayerPrefsSaveService.Main;
-            CreatePowerupButtons();
+            CreateButtonsFromCatalog();
             RefreshButtons();
         }
 
@@ -57,17 +53,15 @@ namespace UI
             if (_onRunEnded != null)
                 _onRunEnded.OnEventRaised -= HandleRunEnded;
 
+            _runIsActive = false;
             StopSlowMotion();
+            RefreshButtons();
         }
 
         private void OnDestroy()
         {
             if (_ballController != null)
-                _ballController.ActiveShieldConsumed -= HandleShieldConsumed;
-            if (_shieldButton != null)
-                _shieldButton.onClick.RemoveListener(UseShield);
-            if (_slowMotionButton != null)
-                _slowMotionButton.onClick.RemoveListener(UseSlowMotion);
+                _ballController.ActiveShieldConsumed -= RefreshButtons;
         }
 
         private void HandleRunStarted()
@@ -83,39 +77,138 @@ namespace UI
             RefreshButtons();
         }
 
-        private void HandleShieldConsumed()
+        private void CreateButtonsFromCatalog()
         {
+            if (_saveService == null)
+            {
+                Debug.LogError("PlayerPrefsSaveService is unavailable; powerup controls cannot be created.", this);
+                return;
+            }
+
+            if (!ShopData.TryLoadItemsFromResources(out var items))
+                return;
+
+            foreach (var item in items)
+            {
+                if (item == null || item.type != ShopItemType.Powerup)
+                    continue;
+
+                var powerupButton = CreateButton(item);
+                _buttons.Add(powerupButton);
+                powerupButton.Button.onClick.AddListener(() => UsePowerup(powerupButton));
+            }
+
+            LayoutButtons();
+        }
+
+        private PowerupButton CreateButton(ShopItemDataModel item)
+        {
+            var buttonObject = new GameObject($"Powerup_{item.id}", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            buttonObject.transform.SetParent(transform, false);
+
+            var image = buttonObject.GetComponent<Image>();
+            image.sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+            image.color = item.powerupEffect == ShopPowerupEffect.ShieldNextHit
+                ? new Color(0.16f, 0.42f, 0.56f, 0.96f)
+                : new Color(0.52f, 0.31f, 0.16f, 0.96f);
+            image.raycastTarget = true;
+
+            var button = buttonObject.GetComponent<Button>();
+            button.targetGraphic = image;
+            button.transition = Selectable.Transition.ColorTint;
+
+            var labelObject = new GameObject("Label", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+            labelObject.transform.SetParent(buttonObject.transform, false);
+            var labelRect = (RectTransform)labelObject.transform;
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = new Vector2(6f, 4f);
+            labelRect.offsetMax = new Vector2(-6f, -4f);
+
+            var label = labelObject.GetComponent<TextMeshProUGUI>();
+            label.font = TMP_Settings.defaultFontAsset;
+            label.fontSize = 27f;
+            label.enableAutoSizing = true;
+            label.fontSizeMin = 16f;
+            label.fontSizeMax = 27f;
+            label.alignment = TextAlignmentOptions.Center;
+            label.color = Color.white;
+            label.raycastTarget = false;
+
+            return new PowerupButton(item, button, label);
+        }
+
+        private void LayoutButtons()
+        {
+            var parentRect = transform as RectTransform;
+            var availableWidth = parentRect != null && parentRect.rect.width > 0f
+                ? parentRect.rect.width - 32f
+                : Screen.width - 32f;
+            const float spacing = 12f;
+            const float preferredWidth = 220f;
+            const float minWidth = 112f;
+
+            var count = _buttons.Count;
+            if (count == 0)
+                return;
+
+            var width = Mathf.Clamp((availableWidth - spacing * (count - 1)) / count, minWidth, preferredWidth);
+            var totalWidth = width * count + spacing * (count - 1);
+            for (var i = 0; i < count; i++)
+            {
+                var rect = _buttons[i].Button.GetComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0.5f, 0f);
+                rect.anchorMax = new Vector2(0.5f, 0f);
+                rect.pivot = new Vector2(0.5f, 0f);
+                rect.sizeDelta = new Vector2(width, 92f);
+                rect.anchoredPosition = new Vector2(-totalWidth * 0.5f + width * (i + 0.5f) + spacing * i, 28f);
+            }
+        }
+
+        private void UsePowerup(PowerupButton powerupButton)
+        {
+            var item = powerupButton.Item;
+            if (!CanUse(item))
+                return;
+
+            switch (item.powerupEffect)
+            {
+                case ShopPowerupEffect.ShieldNextHit:
+                    if (_ballController == null || !_ballController.TryActivateShield())
+                        return;
+                    Consume(item.id);
+                    break;
+
+                case ShopPowerupEffect.SlowMotion:
+                    if (_slowMotionCoroutine != null)
+                        return;
+                    Consume(item.id);
+                    _slowMotionCoroutine = StartCoroutine(SlowMotionRoutine());
+                    break;
+
+                default:
+                    Debug.LogWarning($"Powerup {item.id} has no implemented effect ({item.powerupEffect}).", this);
+                    return;
+            }
+
             RefreshButtons();
         }
 
-        private void UseShield()
+        private bool CanUse(ShopItemDataModel item)
         {
-            if (!CanUse(_shieldPowerupId, ShopPowerupEffect.ShieldNextHit) ||
-                _ballController == null || !_ballController.TryActivateShield())
-                return;
-
-            Consume(_shieldPowerupId);
-        }
-
-        private void UseSlowMotion()
-        {
-            if (!CanUse(_slowMotionPowerupId, ShopPowerupEffect.SlowMotion) ||
-                _slowMotionCoroutine != null)
-                return;
-
-            Consume(_slowMotionPowerupId);
-            _slowMotionCoroutine = StartCoroutine(SlowMotionRoutine());
-            RefreshButtons();
-        }
-
-        private bool CanUse(int powerupId, ShopPowerupEffect expectedEffect)
-        {
-            if (!_runIsActive || _saveService == null ||
-                !ShopData.TryLoadItemFromResources(powerupId, out var item) ||
-                item.type != ShopItemType.Powerup || item.powerupEffect != expectedEffect)
+            if (!_runIsActive || _saveService == null || item == null ||
+                _saveService.LoadShopProgress().GetPowerupCount(item.id) <= 0)
                 return false;
 
-            return _saveService.LoadShopProgress().GetPowerupCount(powerupId) > 0;
+            switch (item.powerupEffect)
+            {
+                case ShopPowerupEffect.ShieldNextHit:
+                    return _ballController != null && !_ballController.HasActiveShield;
+                case ShopPowerupEffect.SlowMotion:
+                    return _slowMotionCoroutine == null;
+                default:
+                    return false;
+            }
         }
 
         private void Consume(int powerupId)
@@ -127,7 +220,6 @@ namespace UI
 
             progress.SetPowerupCount(powerupId, currentCount - 1);
             _saveService.SaveShopProgress(progress);
-            RefreshButtons();
         }
 
         private IEnumerator SlowMotionRoutine()
@@ -146,87 +238,34 @@ namespace UI
                 StopCoroutine(_slowMotionCoroutine);
                 _slowMotionCoroutine = null;
             }
+
             Time.timeScale = 1f;
-        }
-
-        private void CreatePowerupButtons()
-        {
-            _shieldButton = CreateButton("ShieldPowerupButton", -135f, out _shieldLabel);
-            _slowMotionButton = CreateButton("SlowMotionPowerupButton", 135f, out _slowMotionLabel);
-            _shieldButton.onClick.AddListener(UseShield);
-            _slowMotionButton.onClick.AddListener(UseSlowMotion);
-        }
-
-        private Button CreateButton(string objectName, float xPosition, out TextMeshProUGUI label)
-        {
-            var buttonObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
-            buttonObject.transform.SetParent(transform, false);
-
-            var buttonRect = (RectTransform)buttonObject.transform;
-            buttonRect.anchorMin = new Vector2(0.5f, 0.5f);
-            buttonRect.anchorMax = new Vector2(0.5f, 0.5f);
-            buttonRect.pivot = new Vector2(0.5f, 0.5f);
-            buttonRect.anchoredPosition = new Vector2(xPosition, 0f);
-            buttonRect.sizeDelta = new Vector2(240f, 112f);
-
-            var image = buttonObject.GetComponent<Image>();
-            image.sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
-            image.color = objectName == "ShieldPowerupButton"
-                ? new Color(0.16f, 0.42f, 0.56f, 0.96f)
-                : new Color(0.52f, 0.31f, 0.16f, 0.96f);
-            image.raycastTarget = true;
-
-            var button = buttonObject.GetComponent<Button>();
-            button.targetGraphic = image;
-            button.transition = Selectable.Transition.ColorTint;
-
-            var labelObject = new GameObject("Label", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-            labelObject.transform.SetParent(buttonObject.transform, false);
-            var labelRect = (RectTransform)labelObject.transform;
-            labelRect.anchorMin = Vector2.zero;
-            labelRect.anchorMax = Vector2.one;
-            labelRect.offsetMin = new Vector2(8f, 6f);
-            labelRect.offsetMax = new Vector2(-8f, -6f);
-
-            label = labelObject.GetComponent<TextMeshProUGUI>();
-            label.font = TMP_Settings.defaultFontAsset;
-            label.fontSize = 27f;
-            label.enableAutoSizing = true;
-            label.fontSizeMin = 18f;
-            label.fontSizeMax = 27f;
-            label.alignment = TextAlignmentOptions.Center;
-            label.color = Color.white;
-            label.raycastTarget = false;
-
-            return button;
         }
 
         private void RefreshButtons()
         {
-            var shieldCount = GetCount(_shieldPowerupId);
-            var slowMotionCount = GetCount(_slowMotionPowerupId);
-
-            if (_shieldLabel != null)
-                _shieldLabel.text = $"{GetName(_shieldPowerupId, "Shield")}\n{shieldCount}";
-            if (_slowMotionLabel != null)
-                _slowMotionLabel.text = $"{GetName(_slowMotionPowerupId, "Slow Time")}\n{slowMotionCount}";
-
-            if (_shieldButton != null)
-                _shieldButton.interactable = _runIsActive && shieldCount > 0 &&
-                                             _ballController != null && !_ballController.HasActiveShield;
-            if (_slowMotionButton != null)
-                _slowMotionButton.interactable = _runIsActive && slowMotionCount > 0 &&
-                                                 _slowMotionCoroutine == null;
+            foreach (var powerupButton in _buttons)
+            {
+                var count = _saveService == null
+                    ? 0
+                    : _saveService.LoadShopProgress().GetPowerupCount(powerupButton.Item.id);
+                powerupButton.Label.text = $"{powerupButton.Item.name}\n{count}";
+                powerupButton.Button.interactable = CanUse(powerupButton.Item);
+            }
         }
 
-        private int GetCount(int powerupId)
+        private sealed class PowerupButton
         {
-            return _saveService == null ? 0 : _saveService.LoadShopProgress().GetPowerupCount(powerupId);
-        }
+            public readonly ShopItemDataModel Item;
+            public readonly Button Button;
+            public readonly TextMeshProUGUI Label;
 
-        private static string GetName(int powerupId, string fallback)
-        {
-            return ShopData.TryLoadItemFromResources(powerupId, out var item) ? item.name : fallback;
+            public PowerupButton(ShopItemDataModel item, Button button, TextMeshProUGUI label)
+            {
+                Item = item;
+                Button = button;
+                Label = label;
+            }
         }
     }
 }

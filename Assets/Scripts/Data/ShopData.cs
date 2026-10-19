@@ -97,6 +97,16 @@ namespace Data
         public static bool TryLoadItemFromResources(int itemId, out ShopItemDataModel item)
         {
             item = null;
+            if (!TryLoadItemsFromResources(out var items))
+                return false;
+
+            item = items.Find(candidate => candidate != null && candidate.id == itemId);
+            return item != null;
+        }
+
+        public static bool TryLoadItemsFromResources(out List<ShopItemDataModel> items)
+        {
+            items = null;
             var serializedCatalog = Resources.Load<TextAsset>(CatalogResourcePath);
             if (serializedCatalog == null)
             {
@@ -110,14 +120,8 @@ namespace Data
                 if (catalog?.items == null)
                     return false;
 
-                foreach (var candidate in catalog.items)
-                {
-                    if (candidate != null && candidate.id == itemId)
-                    {
-                        item = candidate;
-                        return true;
-                    }
-                }
+                items = catalog.items;
+                return true;
             }
             catch (System.Exception exception)
             {

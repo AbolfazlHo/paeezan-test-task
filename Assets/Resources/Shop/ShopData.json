@@ -8,11 +8,25 @@
       "price": 250
     },
     {
+      "id": 102,
+      "type": 1,
+      "purchasePolicy": 1,
+      "name": "Green Grass",
+      "price": 200
+    },
+    {
       "id": 201,
       "type": 2,
       "purchasePolicy": 1,
       "name": "Sunset Valley",
       "price": 300
+    },
+    {
+      "id": 202,
+      "type": 2,
+      "purchasePolicy": 1,
+      "name": "Bloody Sky",
+      "price": 350
     },
     {
       "id": 301,

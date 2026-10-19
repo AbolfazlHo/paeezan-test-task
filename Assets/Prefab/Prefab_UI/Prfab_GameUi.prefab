@@ -430,6 +430,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1667028451597672363}
+  - component: {fileID: 5711223344556677889}
   m_Layer: 5
   m_Name: Prfab_GameUi
   m_TagString: Untagged
@@ -437,6 +438,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5711223344556677889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7184433992705237812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b60e4b387048a1ba61170e37ffb3dd, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: ''
+  _onRunStarted: {fileID: 11400000, guid: 30e25eb3e35a48e4eaf85de946547ee8, type: 2}
+  _onRunEnded: {fileID: 11400000, guid: 5ccc7e5964b70384f887f7cae16219e1, type: 2}
+  _slowMotionScale: 0.5
+  _slowMotionDuration: 5
 --- !u!224 &1667028451597672363
 RectTransform:
   m_ObjectHideFlags: 0
