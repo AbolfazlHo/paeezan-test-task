@@ -12,7 +12,7 @@ namespace UI.Shop
     public class ShopItem : MonoBehaviour
     {
         [SerializeField] private Image _imageComponent;
-//        [SerializeField] private TextMeshProUGUI _nameText;
+        [SerializeField] private TextMeshProUGUI _nameText;
         [SerializeField] private TextMeshProUGUI _priceText;
         [SerializeField] private Button _purchaseButton;
         [SerializeField] private Button _equipButton;
@@ -48,8 +48,8 @@ namespace UI.Shop
             var sprite = Resources.Load<Sprite>(Path.Combine(ShopData.SpritesGeneralPath, data.id.ToString()));
             if (_imageComponent != null)
                 _imageComponent.sprite = sprite;
-//            if (_nameText != null)
-//                _nameText.text = data.name;
+            if (_nameText != null)
+                _nameText.text = data.name;
             if (_priceText != null)
                 _priceText.text = data.price.ToString();
 
