@@ -8,6 +8,7 @@ using ScriptableObjects.Services;
 
 namespace GameCore
 {
+    /// <summary>Controls orbiting movement, scoring, collisions, shield use, and run-end rewards.</summary>
     public class BallController : MonoBehaviour
     {
         [SerializeField] private IntEvent OnScoreChanged;
@@ -48,7 +49,9 @@ namespace GameCore
         private Color _firstColor;
         private bool _hasActiveShield;
 
+        /// <summary>Whether a shield is currently armed to absorb one obstacle collision.</summary>
         public bool HasActiveShield => _hasActiveShield;
+        /// <summary>Raised when an armed shield absorbs an obstacle collision.</summary>
         public event Action ActiveShieldConsumed;
 
         private void Start()
@@ -74,12 +77,14 @@ namespace GameCore
             OnStartMoving.OnEventRaised -= StartMovement;
         }
 
+        /// <summary>Enables movement and clears any shield left from a previous run.</summary>
         private void StartMovement()
         {
             _hasActiveShield = false;
             canMove = true;
         }
 
+        /// <summary>Arms the one-hit shield if the ball is moving and has no active shield.</summary>
         public bool TryActivateShield()
         {
             if (!canMove || _hasActiveShield)
@@ -159,6 +164,7 @@ namespace GameCore
             }
         }
 
+        /// <summary>Stops the run, plays the death animation, and restores the ball for replay.</summary>
         private void Die()
         {
             canMove = false;
@@ -197,6 +203,7 @@ namespace GameCore
             });
         }
 
+        /// <summary>Converts the completed run's score into currency and saves the balance.</summary>
         private void EarnCurrency()
         {
             if (_score <= 0) return;

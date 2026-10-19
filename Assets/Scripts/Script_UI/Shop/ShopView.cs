@@ -8,9 +8,7 @@ using UnityEngine;
 
 namespace UI.Shop
 {
-    /// <summary>
-    /// Owns the shop screen presentation and forwards player actions to ShopHandler.
-    /// </summary>
+    /// <summary>Builds the shop screen and forwards player actions to ShopHandler.</summary>
     public class ShopView : MonoBehaviour
     {
         [SerializeField] private ShopData _shopData;
@@ -37,6 +35,7 @@ namespace UI.Shop
                 _onTabSelected.OnEventRaised -= HandleTabSelected;
         }
 
+        /// <summary>Reloads catalog and progress data, then rebuilds the visible shop items.</summary>
         public void Refresh()
         {
             if (_onShopDataLoading != null)
@@ -88,6 +87,7 @@ namespace UI.Shop
                 Refresh();
         }
 
+        /// <summary>Runs the purchase through ShopHandler and refreshes UI feedback.</summary>
         private void HandlePurchaseRequested(int itemId)
         {
             var result = _shopHandler.TryPurchase(itemId);
@@ -114,6 +114,7 @@ namespace UI.Shop
             }
         }
 
+        /// <summary>Equips an owned theme and rebuilds the displayed item states.</summary>
         private void HandleEquipRequested(int themeId)
         {
             var result = _shopHandler.TryEquipTheme(themeId);
@@ -144,6 +145,7 @@ namespace UI.Shop
             return true;
         }
 
+        /// <summary>Recreates item views from current catalog and saved progress.</summary>
         private void RebuildItems()
         {
             ClearItems();

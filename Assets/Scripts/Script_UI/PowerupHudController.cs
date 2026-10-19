@@ -11,9 +11,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    /// <summary>
-    /// Builds one in-run control for every powerup present in the saved inventory.
-    /// </summary>
+    /// <summary>Builds powerup controls from the catalog and applies saved inventory during a run.</summary>
     public class PowerupHudController : MonoBehaviour
     {
         [SerializeField] private NullEvent _onRunStarted;
@@ -77,6 +75,7 @@ namespace UI
             RefreshButtons();
         }
 
+        /// <summary>Creates one button for every powerup in the catalog.</summary>
         private void CreateButtonsFromCatalog()
         {
             if (_saveService == null)
@@ -165,6 +164,7 @@ namespace UI
             }
         }
 
+        /// <summary>Activates the selected effect and consumes one saved use.</summary>
         private void UsePowerup(PowerupButton powerupButton)
         {
             var item = powerupButton.Item;
@@ -194,6 +194,7 @@ namespace UI
             RefreshButtons();
         }
 
+        /// <summary>Checks run state, saved quantity, and effect-specific availability.</summary>
         private bool CanUse(ShopItemDataModel item)
         {
             if (!_runIsActive || _saveService == null || item == null ||
@@ -211,6 +212,7 @@ namespace UI
             }
         }
 
+        /// <summary>Decrements and persists one use of the selected powerup.</summary>
         private void Consume(int powerupId)
         {
             var progress = _saveService.LoadShopProgress();
@@ -254,12 +256,14 @@ namespace UI
             }
         }
 
+        /// <summary>Groups the catalog data and UI references for one powerup control.</summary>
         private sealed class PowerupButton
         {
             public readonly ShopItemDataModel Item;
             public readonly Button Button;
             public readonly TextMeshProUGUI Label;
 
+            /// <summary>Creates a view record for a powerup button and its label.</summary>
             public PowerupButton(ShopItemDataModel item, Button button, TextMeshProUGUI label)
             {
                 Item = item;

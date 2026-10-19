@@ -6,11 +6,13 @@ using UnityEngine;
 
 namespace Export
 {
+    /// <summary>Writes selected player preference values to the persistent info.json file.</summary>
     public static class PlayerDataJsonExporter
     {
         private static string filePath => Path.Combine(Application.persistentDataPath, "info.json");
         
 
+        /// <summary>Creates or replaces the exported player data JSON document.</summary>
         public static void SaveJsonFromPlayerPrefs()
         {
             try

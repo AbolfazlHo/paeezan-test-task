@@ -10,8 +10,10 @@ using ScriptableObjects.Services;
 
 namespace Data
 {
+    /// <summary>Loads leaderboard entries, sorts them, and inserts the local player.</summary>
     public class LeaderboardData : MonoBehaviour
     {
+        /// <summary>The active leaderboard data component.</summary>
         public static LeaderboardData Instance { get; private set; }
 
         [SerializeField] private TextAsset namesFile;
@@ -20,6 +22,7 @@ namespace Data
         [SerializeField] private NullEvent OnLoadingPanelShow;
         [SerializeField] private IntEvent OnPanelSelected;
 
+        /// <summary>Sorted entries currently displayed by the leaderboard.</summary>
         public List<PlayerInfo> players;
         
         [SerializeField] private int loadFrameCount = 1;
@@ -52,6 +55,7 @@ namespace Data
             OnPanelSelected.OnEventRaised -= CheckForFirstShow;
         }
 
+        /// <summary>Starts a leaderboard load when a new tab is selected.</summary>
         private void CheckForLoad(int tabType)
         {
             if(tabType == (int)_loadingTab) return;
@@ -65,6 +69,7 @@ namespace Data
             loadingCoroutine = StartCoroutine(LoadLeaderboardCoroutine());
         }
 
+        /// <summary>Builds and sorts sample entries, then inserts the saved local player.</summary>
         private IEnumerator LoadLeaderboardCoroutine()
         {
             _isLoading = true;
@@ -110,6 +115,7 @@ namespace Data
             
         }
 
+        /// <summary>Inserts the local player in score order and refreshes affected ranks in chunks.</summary>
         private IEnumerator InsertUserCoroutine(PlayerInfo user)
         {
             int index = players.BinarySearch(user, new PlayerScoreComparer());

@@ -4,14 +4,12 @@ using UnityEngine;
 
 namespace Data
 {
-    /// <summary>
-    /// Loads and exposes the static shop catalog. Player ownership and currency
-    /// are stored separately by ShopHandler and PlayerPrefsSaveService.
-    /// </summary>
+    /// <summary>Loads and exposes catalog definitions; player progress is stored separately.</summary>
     public class ShopData : MonoBehaviour
     {
         private const string CatalogResourcePath = "Shop/ShopData";
 
+        /// <summary>Resources folder containing sprites named after their catalog ids.</summary>
         public const string SpritesGeneralPath = "Shop/Sprites";
 
         private readonly List<ShopItemDataModel> _items = new List<ShopItemDataModel>();
@@ -20,6 +18,7 @@ namespace Data
         private bool _loadAttempted;
         private bool _isLoaded;
 
+        /// <summary>Returns the catalog items in JSON order, loading the catalog on first access.</summary>
         public IReadOnlyList<ShopItemDataModel> Items
         {
             get
@@ -29,6 +28,7 @@ namespace Data
             }
         }
 
+        /// <summary>Loads and validates the shop catalog from Resources.</summary>
         public bool LoadCatalog()
         {
             if (_loadAttempted)
@@ -85,6 +85,7 @@ namespace Data
             return true;
         }
 
+        /// <summary>Finds a catalog item by id.</summary>
         public bool TryGetItem(int itemId, out ShopItemDataModel item)
         {
             if (LoadCatalog() && _itemsById.TryGetValue(itemId, out item))
@@ -94,6 +95,7 @@ namespace Data
             return false;
         }
 
+        /// <summary>Loads a single catalog item by id without a scene ShopData component.</summary>
         public static bool TryLoadItemFromResources(int itemId, out ShopItemDataModel item)
         {
             item = null;
@@ -104,6 +106,7 @@ namespace Data
             return item != null;
         }
 
+        /// <summary>Loads all catalog entries from Resources.</summary>
         public static bool TryLoadItemsFromResources(out List<ShopItemDataModel> items)
         {
             items = null;

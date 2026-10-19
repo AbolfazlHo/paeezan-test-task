@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace UI.Shop
 {
+    /// <summary>Displays one shop item and forwards purchase or equip requests to its owner.</summary>
     public class ShopItem : MonoBehaviour
     {
         [SerializeField] private Image _imageComponent;
@@ -23,10 +24,14 @@ namespace UI.Shop
         private Action<int> _purchaseRequested;
         private Action<int> _equipRequested;
 
+        /// <summary>Whether the item is already owned or has at least one remaining use.</summary>
         public bool HasPurchased => _hasPurchased;
+        /// <summary>Whether this theme is currently selected.</summary>
         public bool IsEquipped => _isEquipped;
+        /// <summary>Whether the item can be bought under its configured purchase policy.</summary>
         public bool CanPurchase => _data != null && _data.CanPurchase(_hasPurchased);
 
+        /// <summary>Sets the item's data, rendered state, and action callbacks.</summary>
         public void Initialize(
             ShopItemDataModel data,
             bool hasPurchased,

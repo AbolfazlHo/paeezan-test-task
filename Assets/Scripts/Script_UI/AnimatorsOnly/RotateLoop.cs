@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 namespace UI
 {
+    /// <summary>Rotates the attached object continuously for a decorative loop.</summary>
     public class RotateLoop : MonoBehaviour
     {
         [SerializeField] private Vector3 rotationAmount = new Vector3(0, 0, 360f);

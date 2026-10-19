@@ -5,6 +5,7 @@ using DG.Tweening;
 
 namespace GameCore
 {
+    /// <summary>Spawns and recycles obstacles and score pickups around the gameplay ring.</summary>
     public class ObstacleManager : MonoBehaviour
     {
         [SerializeField] private IntEvent OnScoreChanged;
@@ -34,6 +35,7 @@ namespace GameCore
 
 
 
+        /// <summary>Begins a run by spawning its initial obstacles and score pickup.</summary>
         private void OnBallStartMoving()
         {
             var seq = DOTween.Sequence();
@@ -54,6 +56,7 @@ namespace GameCore
             OnGameOverEvent.OnEventRaised += CleaningRing;
         }
 
+        /// <summary>Stops further spawns and animates current obstacles and pickup away.</summary>
         private void CleaningRing()
         {
             _isGameOver = true;
@@ -118,6 +121,7 @@ namespace GameCore
                 SpawnNewObstacle();
         }
 
+        /// <summary>Creates and animates one obstacle at a valid position around the ring.</summary>
         void SpawnNewObstacle()
         {
             if (_isGameOver) return;
@@ -133,6 +137,7 @@ namespace GameCore
             ob.transform.DOScale(firstScale, spawnAnimationTime).SetEase(Ease.OutBack);
         }
 
+        /// <summary>Replaces the score pickup at a position that avoids existing objects.</summary>
         void RefreshScoreItem()
         {
             if (_isGameOver) return;

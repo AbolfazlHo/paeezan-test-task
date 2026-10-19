@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    /// <summary>Saves the first player name and chooses whether to show onboarding or continue.</summary>
     public class NameChecker : MonoBehaviour
     {
         [SerializeField] private NullEvent OnLoadingEnd;
@@ -44,6 +45,7 @@ namespace UI
             OnLoadingEnd.OnEventRaised -= CheckForFirstTimeLogin;
         }
 
+        /// <summary>Saves the entered name or the default player name.</summary>
         private void SaveName()
         {
             var nameText = nameInputField.text;
@@ -56,6 +58,7 @@ namespace UI
             StartCoroutine(ReverseAnimationsCoroutine());
         }
 
+        /// <summary>Shows name entry on first launch or advances directly for returning players.</summary>
         private void CheckForFirstTimeLogin()
         {
             if (PlayerPrefsSaveService.Main.LoadInt("FirstLogin", 0) == 0)
@@ -72,6 +75,7 @@ namespace UI
             }
         }
 
+        /// <summary>Loads the scene following the current loading scene.</summary>
         private void LoadNextScene()
         {
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
@@ -102,6 +106,7 @@ namespace UI
             );
         }
 
+        /// <summary>Plays the form exit transition before loading the next scene.</summary>
         public void ReverseAnimations()
         {
             StartCoroutine(ReverseAnimationsCoroutine());

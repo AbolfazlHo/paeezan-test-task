@@ -5,9 +5,12 @@ using DG.Tweening;
 namespace UI.Shop
 {
     //ToDo: Create a base class for loading. ShopLoading and LeaderboardLaoding should inherit it.
+    /// <summary>Shows and hides the shop loading indicator in response to shop events.</summary>
     public class ShopLoading : MonoBehaviour
     {
+        /// <summary>Raised when the shop starts loading its content.</summary>
         public NullEvent OnShopDataLoading;
+        /// <summary>Raised when the shop finishes loading its content.</summary>
         public NullEvent OnShopDataLoaded;
         [SerializeField] private Transform icon;
         [SerializeField]private CanvasGroup canvasGroup;
@@ -29,6 +32,7 @@ namespace UI.Shop
             OnShopDataLoaded.OnEventRaised -= HideLoading;
         }
 
+        /// <summary>Displays and animates the loading icon.</summary>
         public void ShowLoading()
         {
             icon.gameObject.SetActive(true);
@@ -46,6 +50,7 @@ namespace UI.Shop
 
         }
 
+        /// <summary>Fades out the loading icon and disables it when the fade completes.</summary>
         public void HideLoading()
         {
             icon.DOKill();

@@ -9,6 +9,7 @@ using ScriptableObjects.GameEvents;
 
 namespace UI
 {
+    /// <summary>Animates a loading screen, fills its progress bar, and invokes a completion callback.</summary>
     public class LoadingScreen : MonoBehaviour
     {
         [SerializeField] private NullEvent OnEndAction;
@@ -41,6 +42,7 @@ namespace UI
         }
 
 
+        /// <summary>Runs the loading sequence for the requested fill duration.</summary>
         public void ShowLoadingBar(float fillTime, Action onFinished)
         {
             StartCoroutine(LoadingRoutine(fillTime, onFinished));

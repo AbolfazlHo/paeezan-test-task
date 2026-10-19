@@ -5,6 +5,7 @@ using ScriptableObjects.GameEvents;
 
 namespace UI
 {
+    /// <summary>Moves a tab-button panel out of view when gameplay starts.</summary>
     public class TabButtonsPanelAnimator : MonoBehaviour
     {
         [SerializeField] private NullEvent OnStartGameEvent;
@@ -51,6 +52,7 @@ namespace UI
             );
         }
 
+        /// <summary>Reverses the entrance animation to hide the panel.</summary>
         [Button] 
         public void ReverseAnimation()
         {

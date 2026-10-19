@@ -6,9 +6,12 @@ using UnityEngine;
 
 namespace GameCore
 {
+    /// <summary>Identifies which saved theme category a renderer should receive.</summary>
     public enum ShopThemeRole
     {
+        /// <summary>Apply the selected player theme to this renderer.</summary>
         Player,
+        /// <summary>Apply the selected world theme to this renderer.</summary>
         World
     }
 
